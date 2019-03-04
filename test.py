@@ -2,7 +2,6 @@ import os
 import pandas as pd
 import librosa
 import glob
-import matplotlib.pyplot as plt
 import librosa.display
 import numpy as np
 import scipy as sp
@@ -36,9 +35,6 @@ def main():
     for b in barks:
         data, sampling_rate = librosa.load(b)
         print(sampling_rate)
-        plt.figure(figsize=(12, 4))
-        plt.xlim(0,0.2)
-        librosa.display.waveplot(data, sr=sampling_rate)
         mfccs = np.mean(librosa.feature.mfcc(y=data, sr=sampling_rate, n_mfcc=40).T,axis=0)
         bark_features.append(mfccs)
         # plt.show()

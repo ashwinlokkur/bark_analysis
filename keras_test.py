@@ -17,7 +17,7 @@ def create_training_data():
             try:
                 data, sampling_rate = librosa.load(os.path.join(path, bark))
                 mfccs = np.mean(librosa.feature.mfcc(y=data, sr=sampling_rate, n_mfcc=40).T,axis=0)
-                print(type(mfccs))
+                print(type(mfccs), mfccs.shape)
                 training_data.append([mfccs, catg_num])
             except Exception:
                 pass
@@ -32,7 +32,7 @@ def main():
     X = np.array(X)
     y = np.array(y)
     
-    X = tf.keras.utils.normalize(X, axis=1)
+    X = tf.keras.utils.normalize(X, axis=0)
 
     model = tf.keras.models.Sequential()
     model.add(tf.keras.layers.Flatten())
@@ -46,11 +46,11 @@ def main():
 
     model.save('model1_bark.hdf5')
 
-    # d_test, sr_test = librosa.load('Home.m4a')
-    # mfc_test = np.mean(librosa.feature.mfcc(y=d_test, sr=sr_test, n_mfcc=40).T,axis=0)
-    # mfc_test = np.array(mfc_test)
-    # print("\t\t\t",type(mfc_test))
-    # mfc_test = tf.keras.utils.normalize(mfc_test, axis=1)
+    d_test, sr_test = librosa.load('Home.m4a')
+    mfc_test = np.mean(librosa.feature.mfcc(y=d_test, sr=sr_test, n_mfcc=40).T,axis=0)
+    mfc_test = np.array(mfc_test)
+    mfc_test = tf.keras.utils.normalize(mfc_test, axis=0)
 
-
+    p = model.predict([mfc_test])
+    print(np.argmax(p))
 main()
